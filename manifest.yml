@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: react-webapp2
+  labels:
+    app: react-webapp2
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: react-webapp2
+  template:
+    metadata:
+      labels:
+        app: react-webapp2
+    spec:
+      containers:
+      - name: webapp
+        image: regfrontend1.azurecr.io/react-node-image-db:latest
+        ports:
+        - containerPort: 3080
+        resources:
+          limits:
+            cpu: "0.5"
+            memory: "512Mi"
+          requests:
+            cpu: "0.25"
+            memory: "256Mi"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: react-webapp2
+  labels:
+    app: react-webapp2
+spec:
+  ports:
+  - port: 80
+    targetPort: 3080
+  selector:
+    app: react-webapp2
+  type: LoadBalancer
